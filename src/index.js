@@ -1,52 +1,79 @@
-import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
-import actions from './store/task/actions';
-import createStore from './store/store';
+import React, { useEffect } from "react";
+import ReactDOM from "react-dom";
+import {
+    titleChanged,
+    taskDeleted,
+    createTask,
+    completeTask,
+    loadTasks,
+    getTasks,
+    getTasksLoadingStatus,
+} from "./store/task";
+import configureStore from "./store/store";
+import { Provider } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { getError } from "./store/errors";
 
-const store = createStore();
+const store = configureStore();
 
-const App = () => {
-  const [state, setState] = useState(store.getState());
+const App = (params) => {
+    const state = useSelector(getTasks());
+    const isLoading = useSelector(getTasksLoadingStatus());
+    const error = useSelector(getError());
+    const dispatch = useDispatch();
 
-  useEffect(() => {
-    store.subscribe(() => {
-      setState(store.getState());
-    })
-  }, [])
+    useEffect(() => {
+        dispatch(loadTasks());
+    }, []);
 
-  const handleClick = (id) => {
-    store.dispatch(actions.taskComlited(id));
-  }
-  const handleChange = (id) => {
-    store.dispatch(actions.titleChanged(id));
-  }
-  const handleDelete = (id) => {
-    store.dispatch(actions.taskDeleted(id));
-  }
+    const changeTitle = (taskId) => {
+        dispatch(titleChanged(taskId));
+    };
+    const deleteTask = (taskId) => {
+        dispatch(taskDeleted(taskId));
+    };
+    const handleCreate = () => {
+        const title = 'New task title!';
+        dispatch(createTask(title));
+    };
+    if (isLoading) {
+        return <h1>Loading</h1>;
+    }
+    if (error) {
+        return <p>{error}</p>;
+    }
 
-  return (
-    <>
-      <h1>Redux tasks</h1>
-      <ul>
-        {state.map((task) => (
-          <li key={task.id}>
-            <p>{task.title}</p>
-            <p>{`Complited: ${task.complited}`}</p>
-            <button onClick={() => handleClick(task.id)}>Complited</button>
-            <button onClick={() => handleChange(task.id)}>Change title</button>
-            <button onClick={() => handleDelete(task.id)}>Delete</button>
-            <hr />
-          </li>
-        ))}
-      </ul>
-    </>
-  );
-}
+    return (
+        <>
+            <h1> App</h1>
+            <button type="button" onClick={handleCreate}>Create task</button>
+            <ul>
+                {state.map((el) => (
+                    <li key={el.id}>
+                        <p>{el.title}</p>
+                        <p> {`Completed: ${el.completed}`}</p>
+                        <button onClick={() => dispatch(completeTask(el.id))}>
+                            Complete
+                        </button>
+                        <button onClick={() => changeTitle(el.id)}>
+                            Change title
+                        </button>
+                        <button onClick={() => deleteTask(el.id)}>
+                            Delete
+                        </button>
+                        <hr />
+                    </li>
+                ))}
+            </ul>
+        </>
+    );
+};
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <Provider store={store}>
+            <App />
+        </Provider>
+    </React.StrictMode>,
+    document.getElementById("root")
 );
-
