@@ -18,7 +18,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "release": "./scripts/release.sh chore(release)",
-    "fix": "./scripts/release.sh fix"
+    "fix": "./scripts/release.sh fix",
+    "refactor": "./scripts/release.sh refactor"
   },
   "eslintConfig": {
     "extends": [

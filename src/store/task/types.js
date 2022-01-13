@@ -1,6 +1,6 @@
-export const actionTypes = {
+export const types = {
   taskUpdated: 'task/updated',
   taskDeleted: 'task/deleted',
 }
 
-export default actionTypes;
+export default types;

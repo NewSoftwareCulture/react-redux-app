@@ -1,6 +1,6 @@
-import types from "./actionTypes";
+import types from "./types";
 
-export function taskReducer(state, action) {
+export function reducer(state, action) {
   const newState = [...state];
 
   switch (action.type) {
@@ -15,4 +15,4 @@ export function taskReducer(state, action) {
   }
 }
 
-export default taskReducer;
+export default reducer;

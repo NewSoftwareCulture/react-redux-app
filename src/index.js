@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import actions from './store/actions';
-import initStore from './store/store';
+import actions from './store/task/actions';
+import createStore from './store/store';
 
-const store = initStore();
+const store = createStore();
 
 const App = () => {
   const [state, setState] = useState(store.getState());

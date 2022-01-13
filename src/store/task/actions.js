@@ -1,4 +1,4 @@
-import types from "./actionTypes";
+import types from "./types";
 
 export const actions = {
   taskComlited: (id) => {
